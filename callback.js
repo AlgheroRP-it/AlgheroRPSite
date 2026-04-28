@@ -17,7 +17,7 @@ exports.handler = async function(event) {
   }
 
   const clientId     = process.env.6794088596316329561;
-  const clientSecret = process.env.ROBLOX_CLIENT_SECRET;
+  const clientSecret = process.env.RBX-4IC99H27B0ybJQqS6fAD-SVqz6kckq8n73-k-FT57sGmGFqEl4Hvil19Sj6RHVGG;
   const redirectUri  = `${siteUrl}/.netlify/functions/callback`;
 
   try {
