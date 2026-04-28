@@ -16,7 +16,7 @@ exports.handler = async function(event) {
     return { statusCode: 400, body: 'Codice mancante' };
   }
 
-  const clientId     = process.env.ROBLOX_CLIENT_ID;
+  const clientId     = process.env.6794088596316329561;
   const clientSecret = process.env.ROBLOX_CLIENT_SECRET;
   const redirectUri  = `${siteUrl}/.netlify/functions/callback`;
 
