@@ -2,7 +2,7 @@ exports.handler = async function(event) {
   const params = event.queryStringParameters || {};
   const code = params.code;
   const error = params.error;
-  const siteUrl = process.env.SITE_URL;
+  const siteUrl = process.env.URL || "https://algherorpemergencyhamburg.netlify.app";
 
   if (error) {
     return redirect(siteUrl + '/?error=' + encodeURIComponent(error));
