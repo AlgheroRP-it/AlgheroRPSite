@@ -305,13 +305,22 @@
     document.getElementById('closeDiscord').addEventListener('click', function(){ document.getElementById('discordOverlay').classList.remove('active'); });
 
     document.getElementById('roblox-login-btn').addEventListener('click', function(e){
-      e.preventDefault();
-      var state = Math.random().toString(36).substring(2);
-      sessionStorage.setItem('oauth_state', state);
-      var params = new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: REDIRECT_URI, scope: 'openid profile', response_type: 'code', state: state });
-      window.location.href = ROBLOX_AUTH + '?' + params.toString();
+    e.preventDefault();
+    var state = Math.random().toString(36).substring(2);
+    sessionStorage.setItem('oauth_state', state);
+    
+    // Usiamo URLSearchParams per assicurarci che gli spazi siano codificati correttamente
+    var params = new URLSearchParams({ 
+        client_id: CLIENT_ID, 
+        redirect_uri: REDIRECT_URI, 
+        scope: 'openid profile', // Assicurati che siano entrambi qui
+        response_type: 'code', 
+        state: state 
     });
-
+    
+    window.location.href = ROBLOX_AUTH + '?' + params.toString();
+    });
+    
     function handleOAuthResponse() {
       var params = new URLSearchParams(window.location.search);
       var error = params.get('error');
