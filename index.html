@@ -190,6 +190,16 @@
       #staff { padding: 60px 24px; }
       footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
     }
+
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+    .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: 'Barlow', sans-serif; font-size: 15px; padding: 12px 16px; outline: none; transition: border-color .2s; }
+    .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: #3a4250; }
+    select.form-input option { background: var(--surface); }
+    .btn-submit { width: 100%; background: var(--accent); color: #fff; border: none; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; padding: 16px; cursor: pointer; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%); transition: background .2s; }
+    .btn-submit:hover { background: #c41a06; }
+    
   </style>
 </head>
 <body>
@@ -295,135 +305,119 @@
   </footer>
 
   <!-- REGISTER MODAL -->
-  <div class="overlay" id="overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Accedi con Roblox</h2>
-        <button class="modal-close" id="closeModal">✕</button>
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Registrati</h2>
+      <button class="modal-close" id="closeModal">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div class="modal-logo">
+        <span class="big-badge">ARP</span>
+        <p>Crea il tuo profilo AlgheroRP</p>
       </div>
-      <div class="modal-body">
-        <div class="modal-logo">
-          <span class="big-badge">ARP</span>
-          <p>Collega il tuo account Roblox reale</p>
-        </div>
-        <a href="#" class="roblox-oauth-btn" id="roblox-login-btn">
-          <span class="roblox-logo">🎮</span>
-          Accedi con Roblox
-        </a>
-        <p class="modal-note">
-          Verrai reindirizzato al sito ufficiale di Roblox per autorizzare l'accesso.<br/>
-          Non condividiamo mai la tua password.<br/><br/>
-          <a href="https://en.help.roblox.com/hc/en-us/articles/203312560" target="_blank">Informativa sulla privacy di Roblox →</a>
-        </p>
+      <div class="form-group">
+        <label class="form-label">Username Roblox</label>
+        <input type="text" class="form-input" id="inputRoblox" placeholder="es. Galaxi396RBX"/>
       </div>
+      <div class="form-group">
+        <label class="form-label">Username Discord</label>
+        <input type="text" class="form-input" id="inputDiscord" placeholder="es. galaxi396"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Il tuo Rank</label>
+        <select class="form-input" id="inputRank">
+          <option value="">— Seleziona il tuo rank —</option>
+          <option value="Founder">Founder</option>
+          <option value="Co-Founder">Co-Founder</option>
+          <option value="Sr/Gr.Owner">Sr/Gr.Owner</option>
+          <option value="Owner">Owner</option>
+          <option value="Sr/Gr.Admin">Sr/Gr.Admin</option>
+          <option value="Admin">Admin</option>
+          <option value="Sr/Gr.Mod">Sr/Gr.Mod</option>
+          <option value="Mod">Mod</option>
+          <option value="Sr/Gr.Helper">Sr/Gr.Helper</option>
+          <option value="Helper">Helper</option>
+        </select>
+      </div>
+      <button class="btn-submit" id="submitBtn">REGISTRATI</button>
+      <p class="modal-note" id="modalError" style="color:var(--accent);display:none;">Compila tutti i campi!</p>
+    </div>
+    <div id="successScreen" style="display:none;text-align:center;padding:40px 28px;">
+      <div style="font-size:64px;margin-bottom:16px;">✅</div>
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:#2ed573;margin-bottom:8px;">Registrazione Completata!</h3>
+      <p style="color:var(--text-dim);font-size:14px;line-height:1.7;">Benvenuto in AlgheroRP!<br/>Il tuo profilo è stato salvato.</p>
     </div>
   </div>
+</div>
 
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
-  <script>
-    // ── CONFIG ──
-    const CLIENT_ID    = '6794088596316329561';
-    // L'URL callback sarà il tuo dominio Vercel — aggiornalo dopo il deploy!
-    const REDIRECT_URI = window.location.origin + '/api/callback';
-    const ROBLOX_AUTH  = 'https://apis.roblox.com/oauth/v1/authorize';
+ <script>
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyKlBr9ha5huQomfF6OXDiU3Dov-WSVKrk8Cz3cnhQFQmuE51vTFQRksHj1cvXxFTeV/exec';
 
-    // ── MODAL ──
-    const overlay = document.getElementById('overlay');
-    document.getElementById('openRegister') .addEventListener('click', e => { e.preventDefault(); overlay.classList.add('active'); });
-    document.getElementById('openRegister2').addEventListener('click', e => { e.preventDefault(); overlay.classList.add('active'); });
-    document.getElementById('closeModal')   .addEventListener('click', () => overlay.classList.remove('active'));
-    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('active'); });
+  const overlay = document.getElementById('overlay');
+  document.getElementById('openRegister').addEventListener('click', e => { e.preventDefault(); overlay.classList.add('active'); });
+  document.getElementById('openRegister2').addEventListener('click', e => { e.preventDefault(); overlay.classList.add('active'); });
+  document.getElementById('closeModal').addEventListener('click', () => overlay.classList.remove('active'));
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('active'); });
 
-    // ── LINK OAUTH ROBLOX ──
-    function buildOAuthUrl() {
-      const state = crypto.randomUUID();
-      sessionStorage.setItem('oauth_state', state);
-      const params = new URLSearchParams({
-        client_id:     CLIENT_ID,
-        redirect_uri:  REDIRECT_URI,
-        scope:         'openid profile',
-        response_type: 'code',
-        state,
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const roblox  = document.getElementById('inputRoblox').value.trim();
+    const discord = document.getElementById('inputDiscord').value.trim();
+    const rank    = document.getElementById('inputRank').value;
+    const err     = document.getElementById('modalError');
+
+    if (!roblox || !discord || !rank) {
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+
+    const user = { roblox, discord, rank };
+    localStorage.setItem('arp_user', JSON.stringify(user));
+    applyUserUI(user);
+
+    try {
+      await fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
       });
-      return `${ROBLOX_AUTH}?${params.toString()}`;
-    }
-    document.getElementById('roblox-login-btn').addEventListener('click', e => {
-      e.preventDefault();
-      window.location.href = buildOAuthUrl();
-    });
+    } catch(e) { console.error(e); }
 
-    // ── GESTIONE RISPOSTA OAUTH (parametri URL dopo callback) ──
-    function handleOAuthResponse() {
-      const params = new URLSearchParams(window.location.search);
-      const error  = params.get('error');
+    document.getElementById('modalBody').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    showToast('Benvenuto in AlgheroRP, ' + roblox + '!', 'success');
+  });
 
-      if (error) {
-        showToast('Errore durante il login: ' + error, 'error');
-        clearUrl();
-        return;
-      }
+  function applyUserUI(user) {
+    document.getElementById('nav-register-li').style.display = 'none';
+    document.getElementById('nav-user').classList.add('visible');
+    document.getElementById('nav-username').textContent = user.roblox;
+    document.getElementById('nav-avatar').style.display = 'none';
+    document.getElementById('hero-ctas').style.display = 'none';
+    document.getElementById('hero-welcome').classList.add('visible');
+    document.getElementById('welcome-name').textContent = user.roblox;
+    document.getElementById('welcome-id').textContent = 'Rank: ' + user.rank + ' · Discord: ' + user.discord;
+    document.getElementById('welcome-avatar').style.display = 'none';
+  }
 
-      const id      = params.get('roblox_id');
-      const name    = params.get('roblox_username');
-      const display = params.get('roblox_display');
-      const picture = params.get('roblox_picture');
+  function logout() { localStorage.removeItem('arp_user'); location.reload(); }
 
-      if (id && name) {
-        const user = { id, name, display, picture };
-        localStorage.setItem('arp_user', JSON.stringify(user));
-        applyUserUI(user);
-        showToast(`✓ Benvenuto, ${display || name}!`, 'success');
-        clearUrl();
-      }
-    }
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
 
-    function applyUserUI(user) {
-      // Navbar
-      document.getElementById('nav-register-li').style.display = 'none';
-      const navUser = document.getElementById('nav-user');
-      navUser.classList.add('visible');
-      document.getElementById('nav-username').textContent = user.display || user.name;
-      const navAv = document.getElementById('nav-avatar');
-      if (user.picture) { navAv.src = user.picture; } else { navAv.style.display = 'none'; }
-
-      // Hero
-      document.getElementById('hero-ctas').style.display = 'none';
-      const hw = document.getElementById('hero-welcome');
-      hw.classList.add('visible');
-      document.getElementById('welcome-name').textContent = user.display || user.name;
-      document.getElementById('welcome-id').textContent = `ID Roblox: ${user.id} · @${user.name}`;
-      const wa = document.getElementById('welcome-avatar');
-      if (user.picture) { wa.src = user.picture; } else { wa.style.display = 'none'; }
-    }
-
-    function logout() {
-      localStorage.removeItem('arp_user');
-      location.reload();
-    }
-
-    function clearUrl() {
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    function showToast(msg, type = '') {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.className = `toast ${type} show`;
-      setTimeout(() => t.classList.remove('show'), 3500);
-    }
-
-    // ── INIT ──
-    (function init() {
-      // Controlla se c'è già un utente salvato
-      const saved = localStorage.getItem('arp_user');
-      if (saved) {
-        try { applyUserUI(JSON.parse(saved)); } catch(e) { localStorage.removeItem('arp_user'); }
-      }
-      // Controlla se veniamo dal callback OAuth
-      handleOAuthResponse();
-    })();
-  </script>
+  (function init() {
+    const saved = localStorage.getItem('arp_user');
+    if (saved) { try { applyUserUI(JSON.parse(saved)); } catch(e) { localStorage.removeItem('arp_user'); } }
+  })();
+</script>
 </body>
 </html>
